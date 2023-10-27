@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.activity4.Data.DataForm
 import com.example.activity4.Data.DataSource.jenis
+import com.example.activity4.Data.DataSource.status
 import com.example.activity4.ui.theme.Activity4Theme
 
 class MainActivity : ComponentActivity() {
@@ -150,6 +151,9 @@ fun TampilForm(cobaViewModel: CobaViewModel = viewModel()){
     SelectJK(options = jenis.map{ id -> context.resources.getString(id)},
         onSelectionChanged = { cobaViewModel.setJenisK(it)})
 
+    SelectSTT(options = status.map{ id -> context.resources.getString(id)},
+        onSelectionChanged = { cobaViewModel.setJenisK(it)})
+
     OutlinedTextField(
         value = textalamat,
         singleLine = true,
@@ -185,7 +189,7 @@ fun SelectJK(
     onSelectionChanged: (String) -> Unit = {}
 ) {
     var selectedValue by rememberSaveable { mutableStateOf("") }
-    Row(modifier = Modifier.padding(16.dp)) {
+    Row(modifier = Modifier.padding(10.dp)) {
         Text(text = "Jenis Kelamin")
         options.forEach { item ->
             Row(
@@ -213,7 +217,7 @@ fun SelectSTT(
     onSelectionChanged: (String) -> Unit = {}
 ) {
     var selectedValue by rememberSaveable { mutableStateOf("") }
-    Row(modifier = Modifier.padding(16.dp)) {
+    Row(modifier = Modifier.padding(10.dp)) {
         Text(text = "Status")
         options.forEach { item ->
             Row(
