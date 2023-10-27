@@ -113,6 +113,7 @@ fun TampilForm(cobaViewModel: CobaViewModel = viewModel()){
     val uiState by cobaViewModel.uiState.collectAsState()
     dataForm = uiState
 
+    Text(text = "Register", fontSize = 15.sp, fontWeight = FontWeight.Bold)
     Text(text = "Create Your Account", fontSize = 25.sp, fontWeight = FontWeight.Bold)
 
     OutlinedTextField(
@@ -160,7 +161,7 @@ fun TampilForm(cobaViewModel: CobaViewModel = viewModel()){
         } )
     Button(
         modifier = Modifier.fillMaxWidth(),
-        onClick = {cobaViewModel.insertData(textNama, textTlp, textalamat, textemail, dataForm.sex)
+        onClick = {cobaViewModel.insertData(textNama, textTlp, textalamat, textemail, dataForm.sex, dataForm.sts)
         }
     )
     {
@@ -174,6 +175,8 @@ fun TampilForm(cobaViewModel: CobaViewModel = viewModel()){
         alamatnya = cobaViewModel.alamat,
         jenisnya = cobaViewModel.jenisKl,
         emailnya = cobaViewModel.email,
+        statusnya = cobaViewModel.status,
+
     )
 }
 @Composable
@@ -183,6 +186,35 @@ fun SelectJK(
 ) {
     var selectedValue by rememberSaveable { mutableStateOf("") }
     Row(modifier = Modifier.padding(16.dp)) {
+        Text(text = "Jenis Kelamin")
+        options.forEach { item ->
+            Row(
+                modifier = Modifier.selectable(
+                    selected = selectedValue == item,
+                    onClick = {
+                        selectedValue = item
+                        onSelectionChanged(item)
+                    }),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                RadioButton(selected = selectedValue == item,
+                    onClick = {
+                        selectedValue = item
+                        onSelectionChanged(item)
+                    })
+                Text(item)
+            }
+        }
+    }
+}
+@Composable
+fun SelectSTT(
+    options: List<String>,
+    onSelectionChanged: (String) -> Unit = {}
+) {
+    var selectedValue by rememberSaveable { mutableStateOf("") }
+    Row(modifier = Modifier.padding(16.dp)) {
+        Text(text = "Status")
         options.forEach { item ->
             Row(
                 modifier = Modifier.selectable(
@@ -205,13 +237,17 @@ fun SelectJK(
 }
 
 @Composable
-fun TextHasil(jenisnya: String, alamatnya: String, emailnya: String) {
+fun TextHasil(jenisnya: String, statusnya: String, alamatnya: String, emailnya: String) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(
             text = "Jenis Kelamin : " + jenisnya,
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
+        )
+        Text(
+            text = "Status : " + statusnya,
             modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
         )
         Text(
