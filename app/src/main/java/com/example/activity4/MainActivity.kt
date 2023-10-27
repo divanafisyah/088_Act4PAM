@@ -23,6 +23,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -67,10 +68,11 @@ fun Greeting(name: String, modifier: Modifier){
         )
 }
 @Preview(showBackground = true)
+
 @Composable
 fun GreetingPreview() {
     Activity4Theme {
-
+        TampilLayout()
     }
 }
 @Composable
@@ -101,6 +103,9 @@ fun TampilForm(cobaViewModel: CobaViewModel = viewModel()){
     var textalamat by remember {
         mutableStateOf("")
     }
+    var textemail by remember {
+        mutableStateOf("")
+    }
 
     val context = LocalContext.current
     val dataForm: DataForm
@@ -112,7 +117,7 @@ fun TampilForm(cobaViewModel: CobaViewModel = viewModel()){
         singleLine = true,
         shape = MaterialTheme.shapes.large,
         modifier = Modifier.fillMaxWidth(),
-        label = { Text(text = "Nama Lengkap")},
+        label = { Text(text = "Username")},
         onValueChange = {
             textNama = it
         }
@@ -123,7 +128,7 @@ fun TampilForm(cobaViewModel: CobaViewModel = viewModel()){
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         shape = MaterialTheme.shapes.large,
         modifier = Modifier.fillMaxWidth(),
-        label = { Text(text = "Telpon")},
+        label = { Text(text = "Telepon")},
         onValueChange = {
             textTlp = it
         }
@@ -137,12 +142,21 @@ fun TampilForm(cobaViewModel: CobaViewModel = viewModel()){
         onValueChange = {
             textalamat = it
         } )
-
+    OutlinedTextField(
+        value = textemail,
+        singleLine = true,
+        shape = MaterialTheme.shapes.large,
+        modifier = Modifier.fillMaxWidth(),
+        label = { Text(text = "Email")},
+        onValueChange = {
+            textemail = it
+        } )
     SelectJK(options = jenis.map{ id -> context.resources.getString(id)},
         onSelectionChanged = { cobaViewModel.setJenisK(it)})
     Button(
         modifier = Modifier.fillMaxWidth(),
-        onClick = {cobaViewModel.insertData(textNama, textTlp, textalamat, dataForm.sex)}
+        onClick = {cobaViewModel.insertData(textNama, textTlp, textalamat, textemail, dataForm.sex)
+        }
     ){
         Text(
             text = stringResource(R.string.submit),
@@ -154,7 +168,9 @@ fun TampilForm(cobaViewModel: CobaViewModel = viewModel()){
         namanya = cobaViewModel.namaUsr,
         teleponnya = cobaViewModel.noTlp,
         alamatnya = cobaViewModel.alamat,
-        jenisnya = cobaViewModel.jenisKl)
+        jenisnya = cobaViewModel.jenisKl,
+        emailnya = cobaViewModel.email,
+    )
 }
 @Composable
 fun SelectJK(
@@ -162,7 +178,7 @@ fun SelectJK(
     onSelectionChanged: (String) -> Unit = {}
 ) {
     var selectedValue by rememberSaveable { mutableStateOf("") }
-    Column(modifier = Modifier.padding(16.dp)) {
+    Row(modifier = Modifier.padding(16.dp)) {
         options.forEach { item ->
             Row(
                 modifier = Modifier.selectable(
@@ -185,7 +201,7 @@ fun SelectJK(
 }
 
 @Composable
-fun TextHasil(namanya: String, teleponnya: String, alamatnya: String, jenisnya: String) {
+fun TextHasil(namanya: String, teleponnya: String, alamatnya: String, emailnya: String, jenisnya: String) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         modifier = Modifier.fillMaxWidth()
@@ -200,6 +216,9 @@ fun TextHasil(namanya: String, teleponnya: String, alamatnya: String, jenisnya: 
         )
         Text(
             text = "Alamat : " + alamatnya,
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp))
+        Text(
+            text = "Email : " + emailnya,
             modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp))
         Text(
             text = "Jenis Kelamin : " + jenisnya,
